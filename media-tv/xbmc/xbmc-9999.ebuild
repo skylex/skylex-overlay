@@ -80,7 +80,8 @@ COMMON_DEPEND="virtual/opengl
 	)
 	x11-libs/libXinerama
 	xrandr? ( x11-libs/libXrandr )
-	x11-libs/libXrender"
+	x11-libs/libXrender
+	!media-tv/xbmc-pvr"
 # The cpluff bundled addon uses gettext which needs CVS ...
 RDEPEND="${COMMON_DEPEND}
 	udev? (	sys-fs/udisks sys-power/upower )"
