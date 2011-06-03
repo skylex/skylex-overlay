@@ -108,8 +108,7 @@ src_unpack() {
 
 src_prepare() {
 	# patches for latests revisions of ffmpeg, some functions changed
-	epatch "${FILESDIR}"/${PN}-9999-ffmpeg-9999-1.patch
-	epatch "${FILESDIR}"/${PN}-9999-ffmpeg-9999-2.patch
+	epatch "${FILESDIR}"/${PN}-9999-ffmpeg-9999.patch
 
 	# some dirs ship generated autotools, some dont
 	local d
