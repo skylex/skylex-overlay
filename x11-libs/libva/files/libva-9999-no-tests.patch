@@ -1,0 +1,81 @@
+diff --git a/test/basic/Makefile.am b/test/basic/Makefile.am
+index a2519a2..4ea97e7 100644
+--- a/test/basic/Makefile.am
++++ b/test/basic/Makefile.am
+@@ -23,9 +23,11 @@
+ bin_PROGRAMS = test_01 test_02 test_03 test_04 test_05 test_06 \
+ 		test_07 test_08 test_09 test_10 test_11
+ 
++AM_LDFLAGS = -lX11
++
+ AM_CFLAGS = -I$(top_srcdir)/va -I$(top_srcdir)/src/x11
+ 
+-TEST_LIBS = $(top_builddir)/va/$(libvabackendlib)
++TEST_LIBS = $(top_builddir)/va/$(libvabackendlib) $(top_builddir)/va/libva.la
+ 
+ test_01_LDADD = $(TEST_LIBS)
+ test_01_SOURCES = test_01.c
+diff --git a/test/decode/Makefile.am b/test/decode/Makefile.am
+index ea30643..059c189 100644
+--- a/test/decode/Makefile.am
++++ b/test/decode/Makefile.am
+@@ -24,7 +24,9 @@ bin_PROGRAMS = mpeg2vldemo
+ 
+ AM_CFLAGS = -I$(top_srcdir)/va -I$(top_srcdir)/src/x11
+ 
+-TEST_LIBS = $(top_builddir)/va/$(libvabackendlib)
++AM_LDFLAGS = -lX11
++
++TEST_LIBS = $(top_builddir)/va/$(libvabackendlib) $(top_builddir)/va/libva.la
+ 
+ mpeg2vldemo_LDADD = $(TEST_LIBS)
+ mpeg2vldemo_SOURCES = mpeg2vldemo.c
+diff --git a/test/encode/Makefile.am b/test/encode/Makefile.am
+index b353ca1..bf717e2 100644
+--- a/test/encode/Makefile.am
++++ b/test/encode/Makefile.am
+@@ -24,7 +24,9 @@ bin_PROGRAMS = h264encode
+ 
+ AM_CFLAGS = -I$(top_srcdir)/va -I$(top_srcdir)/src/x11
+ 
+-TEST_LIBS = $(top_builddir)/va/$(libvabackendlib)
++AM_LDFLAGS = -lX11
++
++TEST_LIBS = $(top_builddir)/va/$(libvabackendlib) $(top_builddir)/va/libva.la
+ 
+ h264encode_LDADD = $(TEST_LIBS)
+ h264encode_SOURCES = h264encode.c
+diff --git a/test/putsurface/Makefile.am b/test/putsurface/Makefile.am
+index fe18388..b00c628 100644
+--- a/test/putsurface/Makefile.am
++++ b/test/putsurface/Makefile.am
+@@ -24,7 +24,9 @@ bin_PROGRAMS = putsurface
+ 
+ AM_CFLAGS = -I$(top_srcdir)/va -I$(top_srcdir)/src/x11
+ 
+-TEST_LIBS = $(top_builddir)/va/$(libvabackendlib) -lpthread
++AM_LDFLAGS = -lX11
++
++TEST_LIBS = $(top_builddir)/va/$(libvabackendlib) -lpthread $(top_builddir)/va/libva.la
+ 
+ putsurface_LDADD = $(TEST_LIBS)
+ putsurface_SOURCES = putsurface.c
+diff --git a/test/vainfo/Makefile.am b/test/vainfo/Makefile.am
+index 5fd0070..97dc25d 100644
+--- a/test/vainfo/Makefile.am
++++ b/test/vainfo/Makefile.am
+@@ -23,10 +23,12 @@
+ 
+ bin_PROGRAMS = vainfo
+ 
+-AM_CFLAGS = -I$(top_srcdir)/va -I$(top_srcdir)/test/basic -I$(top_srcdir)/src/x11
++AM_LDFLAGS = -lX11
++
++AM_CFLAGS = -I$(top_srcdir)/va -I$(top_srcdir)/test/basic
+ 
+ vainfo_LDADD = $(top_builddir)/va/$(libvacorelib) $(top_builddir)/va/$(libvabackendlib)
+-vainfo_DEPENDENCIES =  $(top_builddir)/va/$(libvacorelib) $(top_builddir)/va/$(libvabackendlib)
++vainfo_DEPENDENCIES =  $(top_builddir)/va/$(libvacorelib) $(top_builddir)/va/$(libvabackendlib) $(top_builddir)/va/libva.la
+ vainfo_SOURCES = vainfo.c
+ 
+ valgrind:	vainfo

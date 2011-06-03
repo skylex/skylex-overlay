@@ -1,0 +1,89 @@
+ lib/DllAvCodec.h                                   |   12 ------------
+ .../DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp        |   20 ++++++++++----------
+ xbmc/cores/dvdplayer/DVDDemuxers/DVDDemuxFFmpeg.h  |    2 +-
+ 3 files changed, 11 insertions(+), 23 deletions(-)
+
+diff --git a/lib/DllAvCodec.h b/lib/DllAvCodec.h
+index acfbb49..8d2b3df 100644
+--- a/lib/DllAvCodec.h
++++ b/lib/DllAvCodec.h
+@@ -84,18 +84,6 @@ extern "C" {
+                                            CH_FRONT_LEFT_OF_CENTER|CH_FRONT_RIGHT_OF_CENTER)
+ #endif
+ 
+-#if LIBAVCORE_VERSION_INT < AV_VERSION_INT(52,64,0)
+-// API added on: 2010-03-31
+-#define AVMediaType		CodecType
+-#define AVMEDIA_TYPE_UNKNOWN    CODEC_TYPE_UNKNOWN
+-#define AVMEDIA_TYPE_VIDEO      CODEC_TYPE_VIDEO
+-#define AVMEDIA_TYPE_AUDIO      CODEC_TYPE_AUDIO
+-#define AVMEDIA_TYPE_DATA       CODEC_TYPE_DATA
+-#define AVMEDIA_TYPE_SUBTITLE   CODEC_TYPE_SUBTITLE
+-#define AVMEDIA_TYPE_ATTACHMENT CODEC_TYPE_ATTACHMENT
+-#define AVMEDIA_TYPE_NB         CODEC_TYPE_NB
+-#endif
+-
+ #include "threads/SingleLock.h"
+ 
+ class DllAvCodecInterface
+diff --git a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
+index 39f3548..82d2a00 100644
+--- a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
++++ b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
+@@ -176,7 +176,7 @@ bool CDVDVideoCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
+       if(pCodec->id == hints.codec
+       && pCodec->capabilities & CODEC_CAP_HWACCEL_VDPAU)
+       {
+-        if ((pCodec->id == CODEC_ID_MPEG4 || pCodec->id == CODEC_ID_XVID) && !g_advancedSettings.m_videoAllowMpeg4VDPAU)
++        if ((pCodec->id == CODEC_ID_MPEG4) && !g_advancedSettings.m_videoAllowMpeg4VDPAU)
+           continue;
+ 
+         CLog::Log(LOGNOTICE,"CDVDVideoCodecFFmpeg::Open() Creating VDPAU(%ix%i, %d)",hints.width, hints.height, hints.codec);
+@@ -329,17 +329,17 @@ void CDVDVideoCodecFFmpeg::SetDropState(bool bDrop)
+       // TODO: 'hurry_up' has been deprecated in favor of the skip_* variables
+       // Use those instead.
+ 
+-      m_pCodecContext->hurry_up = 1;
+-      //m_pCodecContext->skip_frame = AVDISCARD_NONREF;
+-      //m_pCodecContext->skip_idct = AVDISCARD_NONREF;
+-      //m_pCodecContext->skip_loop_filter = AVDISCARD_NONREF;
++      //m_pCodecContext->hurry_up = 1;
++      m_pCodecContext->skip_frame = AVDISCARD_NONREF;
++      m_pCodecContext->skip_idct = AVDISCARD_NONREF;
++      m_pCodecContext->skip_loop_filter = AVDISCARD_NONREF;
+     }
+     else
+     {
+-      m_pCodecContext->hurry_up = 0;
+-      //m_pCodecContext->skip_frame = AVDISCARD_DEFAULT;
+-      //m_pCodecContext->skip_idct = AVDISCARD_DEFAULT;
+-      //m_pCodecContext->skip_loop_filter = AVDISCARD_DEFAULT;
++      //m_pCodecContext->hurry_up = 0;
++      m_pCodecContext->skip_frame = AVDISCARD_DEFAULT;
++      m_pCodecContext->skip_idct = AVDISCARD_DEFAULT;
++      m_pCodecContext->skip_loop_filter = AVDISCARD_DEFAULT;
+     }
+   }
+ }
+@@ -412,7 +412,7 @@ int CDVDVideoCodecFFmpeg::Decode(BYTE* pData, int iSize, double dts, double pts)
+     return VC_ERROR;
+   }
+ 
+-  if (len != iSize && !m_pCodecContext->hurry_up)
++  if (len != iSize && m_pCodecContext->skip_frame != AVDISCARD_NONREF)
+     CLog::Log(LOGWARNING, "%s - avcodec_decode_video didn't consume the full packet. size: %d, consumed: %d", __FUNCTION__, iSize, len);
+ 
+   if (!iGotPicture)
+diff --git a/xbmc/cores/dvdplayer/DVDDemuxers/DVDDemuxFFmpeg.h b/xbmc/cores/dvdplayer/DVDDemuxers/DVDDemuxFFmpeg.h
+index fd76517..c68b357 100644
+--- a/xbmc/cores/dvdplayer/DVDDemuxers/DVDDemuxFFmpeg.h
++++ b/xbmc/cores/dvdplayer/DVDDemuxers/DVDDemuxFFmpeg.h
+@@ -124,7 +124,7 @@ protected:
+   void UpdateCurrentPTS();
+ 
+   CRITICAL_SECTION m_critSection;
+-  // #define MAX_STREAMS 42 // from avformat.h
++  #define MAX_STREAMS 100
+   CDemuxStream* m_streams[MAX_STREAMS]; // maximum number of streams that ffmpeg can handle
+ 
+   ByteIOContext* m_ioContext;
