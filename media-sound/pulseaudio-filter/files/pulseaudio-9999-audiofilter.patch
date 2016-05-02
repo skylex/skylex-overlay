@@ -1,0 +1,27 @@
+--- ./src/modules/alsa/mixer/profile-sets/default.conf.orig	2011-10-20 06:54:16.000000000 -0600
++++ ./src/modules/alsa/mixer/profile-sets/default.conf	2011-11-17 02:16:00.038900536 -0700
+@@ -173,6 +173,12 @@ channel-map = left,right
+ priority = 4
+ direction = output
+ 
++[Mapping hdmi-surround-71]
++device-strings = hdmi:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe,side-left,side-right
++priority = 5
++direction = output
++
+ ; An example for defining multiple-sink profiles
+ #[Profile output:analog-stereo+output:iec958-stereo+input:analog-stereo]
+ #description = Foobar
+--- ./src/modules/alsa/alsa-mixer.c.orig	2011-10-20 06:54:16.000000000 -0600
++++ ./src/modules/alsa/alsa-mixer.c	2011-11-17 02:15:38.168035216 -0700
+@@ -3700,7 +3700,8 @@ static int mapping_verify(pa_alsa_mappin
+         { "iec958-passthrough",     N_("Digital Passthrough  (IEC958)") },
+         { "iec958-ac3-surround-40", N_("Digital Surround 4.0 (IEC958/AC3)") },
+         { "iec958-ac3-surround-51", N_("Digital Surround 5.1 (IEC958/AC3)") },
+-        { "hdmi-stereo",            N_("Digital Stereo (HDMI)") }
++        { "hdmi-stereo",            N_("Digital Stereo (HDMI)") },
++        { "hdmi-surround-71",       N_("Digital Surround 7.1 (HDMI)") }
+     };
+ 
+     pa_assert(m);

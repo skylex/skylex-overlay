@@ -4,10 +4,14 @@
 
 EAPI="2"
 
-inherit eutils git
+inherit user eutils git-2
 
 #EGIT_REPO_URI="git://github.com/opdenkamp/tvheadend.git"
-EGIT_REPO_URI="git://github.com/andoma/tvheadend.git"
+#EGIT_REPO_URI="git://github.com/andoma/tvheadend.git"
+EGIT_REPO_URI="git://github.com/tvheadend/tvheadend.git"
+#EGIT_REPO_URI="git://github.com/adamsutton/tvheadend.git"
+#EGIT_REPO_URI="git://github.com/Glandos/tvheadend.git"
+#EGIT_BRANCH="iptv_rtsp"
 
 DESCRIPTION="Tvheadend is a combined DVB receiver, Digital Video Recorder and Live TV streaming server"
 #HOMEPAGE="https://github.com/opdenkamp/tvheadend"
@@ -18,7 +22,7 @@ SLOT="0"
 KEYWORDS=""
 IUSE="avahi xmltv"
 
-DEPEND="media-tv/linuxtv-dvb-headers"
+DEPEND="virtual/linuxtv-dvb-headers"
 
 RDEPEND="${DEPEND}
 	xmltv? ( media-tv/xmltv )

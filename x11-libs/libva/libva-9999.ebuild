@@ -3,7 +3,7 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/libva/libva-9999.ebuild,v 1.0 2011/06/01 12:25:00 alexb38 Exp $
 
 EAPI="3"
-inherit git autotools
+inherit git-2 autotools
 
 DESCRIPTION="Video Acceleration (VA) API for Linux"
 HOMEPAGE="http://cgit.freedesktop.org/libva/"
