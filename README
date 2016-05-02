@@ -12,7 +12,7 @@ cd /usr/local/portage
 
 git clone git://github.com/skylex/skylex-overlay.git
 
-echo 'PORTDIR_OVERLAY="/usr/local/portage/skylex-overlay"' >> /etc/make.conf
+echo 'PORTDIR_OVERLAY="/usr/local/portage/skylex-overlay"' >> /etc/portage/make.conf
 
 
 Enjoy!
